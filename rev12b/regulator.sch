@@ -43,7 +43,7 @@ encoding utf-8
 Sheet 1 1
 Title "PWM Regulator v2"
 Date "2015-06-18"
-Rev "1.2b"
+Rev "1.2c"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -260,7 +260,7 @@ L D D2
 U 1 1 5563BF9E
 P 4900 3350
 F 0 "D2" H 4900 3450 50  0000 C CNN
-F 1 "D" H 4900 3250 50  0000 C CNN
+F 1 "1N4004" H 4900 3250 50  0000 C CNN
 F 2 "" H 4900 3350 60  0000 C CNN
 F 3 "" H 4900 3350 60  0000 C CNN
 	1    4900 3350
@@ -324,7 +324,7 @@ Wire Wire Line
 	5550 3750 5450 3750
 Connection ~ 5450 3750
 Wire Wire Line
-	5450 4250 5450 5000
+	5450 5000 5450 4250
 Connection ~ 5450 5000
 Wire Wire Line
 	5850 3750 6000 3750
@@ -372,9 +372,9 @@ F 3 "" H 7200 3150 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	7600 3150 7350 3150
+	7350 3150 7600 3150
 Wire Wire Line
-	7050 3150 6800 3150
+	6800 3150 7050 3150
 Wire Wire Line
 	1750 3150 1750 4050
 Text GLabel 2150 2800 0    60   Input ~ 0
@@ -386,7 +386,7 @@ Wire Wire Line
 Text GLabel 1900 5050 0    60   Input ~ 0
 Vin-
 Wire Wire Line
-	2150 5050 1950 5050
+	2150 5050 1900 5050
 Connection ~ 2150 5000
 $Comp
 L LED D4
@@ -422,5 +422,18 @@ Connection ~ 5050 5000
 Wire Wire Line
 	2700 3350 4750 3350
 Wire Wire Line
-	1750 3150 6400 3150
+	3500 3150 6400 3150
+$Comp
+L D D5
+U 1 1 558499A4
+P 3350 3150
+F 0 "D5" H 3350 3250 50  0000 C CNN
+F 1 "1N4007" H 3350 3050 50  0000 C CNN
+F 2 "" H 3350 3150 60  0000 C CNN
+F 3 "" H 3350 3150 60  0000 C CNN
+	1    3350 3150
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	3200 3150 1750 3150
 $EndSCHEMATC
