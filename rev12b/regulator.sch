@@ -1,0 +1,426 @@
+EESchema Schematic File Version 2
+LIBS:regulator-rescue
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:microchip_dspic33dsc
+LIBS:microchip_pic10mcu
+LIBS:microchip_pic12mcu
+LIBS:microchip_pic16mcu
+LIBS:microchip_pic18mcu
+LIBS:microchip_pic32mcu
+LIBS:regulator-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "PWM Regulator v2"
+Date "2015-06-18"
+Rev "1.2b"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L PIC12F675-I/P IC1
+U 1 1 5562ECDD
+P 3850 4350
+F 0 "IC1" H 3200 4900 50  0000 L CNN
+F 1 "PIC12F675-I/P" H 3200 4800 50  0000 L CNN
+F 2 "" H 3850 4350 60  0000 C CNN
+F 3 "" H 3850 4350 60  0000 C CNN
+	1    3850 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R1
+U 1 1 5562F100
+P 5000 4050
+F 0 "R1" V 5080 4050 50  0000 C CNN
+F 1 "1k" V 5000 4050 50  0000 C CNN
+F 2 "" V 4930 4050 30  0000 C CNN
+F 3 "" H 5000 4050 30  0000 C CNN
+	1    5000 4050
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR1
+U 1 1 5562F1DC
+P 5600 5200
+F 0 "#PWR1" H 5600 4950 50  0001 C CNN
+F 1 "GND" H 5600 5050 50  0000 C CNN
+F 2 "" H 5600 5200 60  0000 C CNN
+F 3 "" H 5600 5200 60  0000 C CNN
+	1    5600 5200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 5000 5600 5200
+Wire Wire Line
+	3050 5000 3050 4650
+Connection ~ 5600 5000
+Connection ~ 5600 3150
+$Comp
+L INDUCTOR L1
+U 1 1 5562F5BA
+P 7900 3150
+F 0 "L1" V 7850 3150 50  0000 C CNN
+F 1 "100uH 3A" V 8000 3150 50  0000 C CNN
+F 2 "" H 7900 3150 60  0000 C CNN
+F 3 "" H 7900 3150 60  0000 C CNN
+	1    7900 3150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L D_Schottky D1
+U 1 1 5562F65F
+P 7400 3700
+F 0 "D1" H 7400 3800 50  0000 C CNN
+F 1 "1N5822" H 7400 3600 50  0000 C CNN
+F 2 "" H 7400 3700 60  0000 C CNN
+F 3 "" H 7400 3700 60  0000 C CNN
+	1    7400 3700
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7400 5000 7400 3850
+Wire Wire Line
+	7400 3550 7400 3150
+Connection ~ 7400 3150
+$Comp
+L CP1 C2
+U 1 1 5562F717
+P 8350 3650
+F 0 "C2" H 8375 3750 50  0000 L CNN
+F 1 "100u" H 8375 3550 50  0000 L CNN
+F 2 "" H 8350 3650 60  0000 C CNN
+F 3 "" H 8350 3650 60  0000 C CNN
+	1    8350 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8200 3150 9500 3150
+Text GLabel 9500 3150 2    60   Output ~ 0
++
+$Comp
+L LM7805 U1
+U 1 1 5562FA2D
+P 2150 4100
+F 0 "U1" H 2300 3904 60  0000 C CNN
+F 1 "LM7805" H 2150 4300 60  0000 C CNN
+F 2 "" H 2150 4100 60  0000 C CNN
+F 3 "" H 2150 4100 60  0000 C CNN
+	1    2150 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2150 4350 2150 5050
+Connection ~ 3050 5000
+Wire Wire Line
+	2550 4050 3050 4050
+$Comp
+L CP1 C1
+U 1 1 5562FCAD
+P 2700 4450
+F 0 "C1" H 2725 4550 50  0000 L CNN
+F 1 "100uf" H 2725 4350 50  0000 L CNN
+F 2 "" H 2700 4450 60  0000 C CNN
+F 3 "" H 2700 4450 60  0000 C CNN
+	1    2700 4450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2700 4600 2700 5000
+Connection ~ 2700 5000
+$Comp
+L R R2
+U 1 1 556305A0
+P 5250 4550
+F 0 "R2" V 5330 4550 50  0000 C CNN
+F 1 "10k" V 5250 4550 50  0000 C CNN
+F 2 "" V 5180 4550 30  0000 C CNN
+F 3 "" H 5250 4550 30  0000 C CNN
+	1    5250 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8350 3150 8350 3500
+Connection ~ 8350 3150
+Wire Wire Line
+	8350 5000 8350 3800
+Connection ~ 7400 5000
+$Comp
+L POT RV1
+U 1 1 55630C4A
+P 8800 4450
+F 0 "RV1" H 8800 4350 50  0000 C CNN
+F 1 "100k" H 8800 4450 50  0000 C CNN
+F 2 "" H 8800 4450 60  0000 C CNN
+F 3 "" H 8800 4450 60  0000 C CNN
+	1    8800 4450
+	0    1    1    0   
+$EndComp
+$Comp
+L R R4
+U 1 1 55631075
+P 8800 3800
+F 0 "R4" V 8880 3800 50  0000 C CNN
+F 1 "100k" V 8800 3800 50  0000 C CNN
+F 2 "" V 8730 3800 30  0000 C CNN
+F 3 "" H 8800 3800 30  0000 C CNN
+	1    8800 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8800 3150 8800 3650
+Connection ~ 8800 3150
+Wire Wire Line
+	8800 3950 8800 4200
+Connection ~ 8350 5000
+Wire Wire Line
+	4650 4050 4850 4050
+Wire Wire Line
+	5250 4700 8550 4700
+Wire Wire Line
+	8550 4700 8550 4100
+Wire Wire Line
+	8550 4100 8800 4100
+Connection ~ 8800 4100
+Wire Wire Line
+	8950 5000 8950 4450
+Text GLabel 9500 5000 2    60   Output ~ 0
+-
+Connection ~ 8950 5000
+$Comp
+L Q_NMOS_GDS-RESCUE-regulator Q3
+U 1 1 5563B1A2
+P 6600 3250
+F 0 "Q3" V 6850 3500 50  0000 R CNN
+F 1 "BUK9511-55A (Logic Level)" V 7000 3500 50  0000 R CNN
+F 2 "" H 6800 3350 29  0000 C CNN
+F 3 "" H 6600 3250 60  0000 C CNN
+	1    6600 3250
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Q_NPN_EBC-RESCUE-regulator Q1
+U 1 1 5563BACB
+P 6200 3850
+F 0 "Q1" H 6500 3900 50  0000 R CNN
+F 1 "PN2222A" H 6800 3800 50  0000 R CNN
+F 2 "" H 6400 3950 29  0000 C CNN
+F 3 "" H 6200 3850 60  0000 C CNN
+	1    6200 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Q_PNP_EBC-RESCUE-regulator Q2
+U 1 1 5563BB02
+P 6200 4300
+F 0 "Q2" H 6500 4350 50  0000 R CNN
+F 1 "2N2907A" H 6800 4250 50  0000 R CNN
+F 2 "" H 6400 4400 29  0000 C CNN
+F 3 "" H 6200 4300 60  0000 C CNN
+	1    6200 4300
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	6000 3750 6000 4300
+$Comp
+L D D2
+U 1 1 5563BF9E
+P 4900 3350
+F 0 "D2" H 4900 3450 50  0000 C CNN
+F 1 "D" H 4900 3250 50  0000 C CNN
+F 2 "" H 4900 3350 60  0000 C CNN
+F 3 "" H 4900 3350 60  0000 C CNN
+	1    4900 3350
+	-1   0    0    1   
+$EndComp
+$Comp
+L CP C3
+U 1 1 5563CD46
+P 6850 4050
+F 0 "C3" H 6875 4150 50  0000 L CNN
+F 1 "1u" H 6875 3950 50  0000 L CNN
+F 2 "" H 6888 3900 30  0000 C CNN
+F 3 "" H 6850 4050 60  0000 C CNN
+	1    6850 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 4150 5250 4150
+Wire Wire Line
+	5250 4150 5250 4400
+$Comp
+L Q_NPN_EBC-RESCUE-regulator Q4
+U 1 1 55642E1A
+P 5350 4050
+F 0 "Q4" H 5650 4100 50  0000 R CNN
+F 1 "PN2222A" H 5950 4000 50  0000 R CNN
+F 2 "" H 5550 4150 29  0000 C CNN
+F 3 "" H 5350 4050 60  0000 C CNN
+	1    5350 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R5
+U 1 1 55643032
+P 5700 3750
+F 0 "R5" V 5780 3750 50  0000 C CNN
+F 1 "1k" V 5700 3750 50  0000 C CNN
+F 2 "" V 5630 3750 30  0000 C CNN
+F 3 "" H 5700 3750 30  0000 C CNN
+	1    5700 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L R R3
+U 1 1 556430B0
+P 5450 3550
+F 0 "R3" V 5530 3550 50  0000 C CNN
+F 1 "10k" V 5450 3550 50  0000 C CNN
+F 2 "" V 5380 3550 30  0000 C CNN
+F 3 "" H 5450 3550 30  0000 C CNN
+	1    5450 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5450 3700 5450 3850
+Wire Wire Line
+	5450 3400 5450 3350
+Wire Wire Line
+	5050 3350 6850 3350
+Wire Wire Line
+	5550 3750 5450 3750
+Connection ~ 5450 3750
+Wire Wire Line
+	5450 4250 5450 5000
+Connection ~ 5450 5000
+Wire Wire Line
+	5850 3750 6000 3750
+Connection ~ 6000 3850
+Wire Wire Line
+	6850 4200 6850 4500
+Wire Wire Line
+	6600 4050 6600 3450
+Connection ~ 5450 3350
+Wire Wire Line
+	6850 3350 6850 3900
+Connection ~ 6300 3350
+Wire Wire Line
+	6300 3350 6300 3650
+Wire Wire Line
+	7000 4500 7000 3150
+Connection ~ 7000 3150
+Wire Wire Line
+	2150 5000 9500 5000
+Wire Wire Line
+	2700 3350 2700 4300
+Connection ~ 2700 4050
+Wire Wire Line
+	6300 4050 6300 4100
+Wire Wire Line
+	6300 4500 7000 4500
+Connection ~ 6850 4500
+Wire Wire Line
+	6600 4050 6300 4050
+Text Label 4700 4050 0    60   ~ 0
+PWM
+Text Label 5750 3350 0    60   ~ 0
+BootStrap
+Text Label 5700 4700 0    60   ~ 0
+FEEDBACK
+$Comp
+L D_Schottky D3
+U 1 1 55680546
+P 7200 3150
+F 0 "D3" H 7200 3250 50  0000 C CNN
+F 1 "1N5822" H 7200 3050 50  0000 C CNN
+F 2 "" H 7200 3150 60  0000 C CNN
+F 3 "" H 7200 3150 60  0000 C CNN
+	1    7200 3150
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	7600 3150 7350 3150
+Wire Wire Line
+	7050 3150 6800 3150
+Wire Wire Line
+	1750 3150 1750 4050
+Text GLabel 2150 2800 0    60   Input ~ 0
+Vin(14+)
+Wire Wire Line
+	2150 2800 5600 2800
+Wire Wire Line
+	5600 2800 5600 3150
+Text GLabel 1900 5050 0    60   Input ~ 0
+Vin-
+Wire Wire Line
+	2150 5050 1950 5050
+Connection ~ 2150 5000
+$Comp
+L LED D4
+U 1 1 55680B3B
+P 5050 4750
+F 0 "D4" H 5050 4850 50  0000 C CNN
+F 1 "LED" H 5050 4650 50  0000 C CNN
+F 2 "" H 5050 4750 60  0000 C CNN
+F 3 "" H 5050 4750 60  0000 C CNN
+	1    5050 4750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L R R6
+U 1 1 55680C08
+P 4850 4250
+F 0 "R6" V 4930 4250 50  0000 C CNN
+F 1 "1k" V 4850 4250 50  0000 C CNN
+F 2 "" V 4780 4250 30  0000 C CNN
+F 3 "" H 4850 4250 30  0000 C CNN
+	1    4850 4250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4700 4250 4650 4250
+Wire Wire Line
+	5000 4250 5050 4250
+Wire Wire Line
+	5050 4250 5050 4550
+Wire Wire Line
+	5050 4950 5050 5000
+Connection ~ 5050 5000
+Wire Wire Line
+	2700 3350 4750 3350
+Wire Wire Line
+	1750 3150 6400 3150
+$EndSCHEMATC
