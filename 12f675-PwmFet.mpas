@@ -2,6 +2,7 @@ program _12f675_PwmFet;
 
 const
    c138 = 942;    // 13.8 * 1024 / 15
+   c051 = 348;    // 5.1 & 1024 / 15
    cLow = 21;    // 0.3 * 1024 / 15
    { 4MHz }
    PWM_MAX = 255;   // 1000000 / 4 / 255
@@ -13,6 +14,7 @@ const
 var
    LED1:sbit at GP2_bit;
    PWM_SIG:sbit at GP0_bit;
+   VOut5:sbit at GP5_bit;     // pin 2
    PWM_TICK, ON_PWM, VOL_PWM:byte;
    TICK_1000:Byte;
    
@@ -29,6 +31,7 @@ var
    short_Timer:Byte;
    short_count:Byte;
    short_check:Boolean;
+   vTarget:word;
    
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
@@ -91,7 +94,8 @@ begin
      short_check:=False;
      TICK_1000:=0;
      
-     OPTION_REG:=%11010001;        // ~1KHz @ 4MHz
+     OPTION_REG:=%01010001;        // ~1KHz @ 4MHz, enable weak pull-up
+     WPU5_bit:=1;
 
      TMR0IE_bit:=1;
      PEIE_bit:=1;
@@ -108,6 +112,11 @@ begin
      
      Delay_10ms;
      
+     if VOut5=0 then
+       vTarget:=c051
+       else
+         vTarget:=c138;
+     
      while True do begin
          if (not out_short) and Delay1ms(ADC_Timer,1) then begin
              adc_vol:=ADC_Read(1);
@@ -117,10 +126,10 @@ begin
                out_timer:=TICK_1000;
                out_488:=10;         // 2 seconds
              end else begin
-               if adc_vol<c138 then begin
+               if adc_vol<vTarget then begin
                  if VOL_PWM<PWM_MAX then
                    Inc(VOL_PWM);
-               end else if adc_vol>c138 then begin
+               end else if adc_vol>vTarget then begin
                  if VOL_PWM>0 then
                    Dec(VOL_PWM);
                end;
