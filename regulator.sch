@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:regulator-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -40,9 +41,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "PWM Regulator v1"
-Date "2015'년' 05'월' 29'일' 금요일"
-Rev "1.2"
+Title "PWM Regulator v2"
+Date "2015-06-18"
+Rev "1.2c"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -220,18 +221,18 @@ Text GLabel 9500 5000 2    60   Output ~ 0
 -
 Connection ~ 8950 5000
 $Comp
-L Q_NMOS_GDS Q3
+L Q_NMOS_GDS-RESCUE-regulator Q3
 U 1 1 5563B1A2
 P 6600 3250
-F 0 "Q3" H 6900 3300 50  0000 R CNN
-F 1 "PHP18NQ10T" H 7250 3200 50  0000 R CNN
+F 0 "Q3" V 6850 3500 50  0000 R CNN
+F 1 "BUK9511-55A (Logic Level)" V 7000 3500 50  0000 R CNN
 F 2 "" H 6800 3350 29  0000 C CNN
 F 3 "" H 6600 3250 60  0000 C CNN
 	1    6600 3250
 	0    -1   -1   0   
 $EndComp
 $Comp
-L Q_NPN_EBC Q1
+L Q_NPN_EBC-RESCUE-regulator Q1
 U 1 1 5563BACB
 P 6200 3850
 F 0 "Q1" H 6500 3900 50  0000 R CNN
@@ -242,7 +243,7 @@ F 3 "" H 6200 3850 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Q_PNP_EBC Q2
+L Q_PNP_EBC-RESCUE-regulator Q2
 U 1 1 5563BB02
 P 6200 4300
 F 0 "Q2" H 6500 4350 50  0000 R CNN
@@ -259,7 +260,7 @@ L D D2
 U 1 1 5563BF9E
 P 4900 3350
 F 0 "D2" H 4900 3450 50  0000 C CNN
-F 1 "D" H 4900 3250 50  0000 C CNN
+F 1 "1N4004" H 4900 3250 50  0000 C CNN
 F 2 "" H 4900 3350 60  0000 C CNN
 F 3 "" H 4900 3350 60  0000 C CNN
 	1    4900 3350
@@ -279,13 +280,9 @@ $EndComp
 Wire Wire Line
 	4650 4150 5250 4150
 Wire Wire Line
-	4750 3350 4600 3350
-Wire Wire Line
-	4600 3350 4600 3150
-Wire Wire Line
 	5250 4150 5250 4400
 $Comp
-L Q_NPN_EBC Q4
+L Q_NPN_EBC-RESCUE-regulator Q4
 U 1 1 55642E1A
 P 5350 4050
 F 0 "Q4" H 5650 4100 50  0000 R CNN
@@ -327,7 +324,7 @@ Wire Wire Line
 	5550 3750 5450 3750
 Connection ~ 5450 3750
 Wire Wire Line
-	5450 4250 5450 5000
+	5450 5000 5450 4250
 Connection ~ 5450 5000
 Wire Wire Line
 	5850 3750 6000 3750
@@ -348,7 +345,7 @@ Connection ~ 7000 3150
 Wire Wire Line
 	2150 5000 9500 5000
 Wire Wire Line
-	2700 4300 2700 4050
+	2700 3350 2700 4300
 Connection ~ 2700 4050
 Wire Wire Line
 	6300 4050 6300 4100
@@ -375,18 +372,11 @@ F 3 "" H 7200 3150 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	7600 3150 7350 3150
+	7350 3150 7600 3150
 Wire Wire Line
-	7050 3150 6800 3150
+	6800 3150 7050 3150
 Wire Wire Line
-	5200 3350 5200 3600
-Wire Wire Line
-	5200 3600 1750 3600
-Connection ~ 5200 3350
-Wire Wire Line
-	1750 3600 1750 4050
-Wire Wire Line
-	4600 3150 6400 3150
+	1750 3150 1750 4050
 Text GLabel 2150 2800 0    60   Input ~ 0
 Vin(14+)
 Wire Wire Line
@@ -396,7 +386,7 @@ Wire Wire Line
 Text GLabel 1900 5050 0    60   Input ~ 0
 Vin-
 Wire Wire Line
-	2150 5050 1950 5050
+	2150 5050 1900 5050
 Connection ~ 2150 5000
 $Comp
 L LED D4
@@ -429,4 +419,21 @@ Wire Wire Line
 Wire Wire Line
 	5050 4950 5050 5000
 Connection ~ 5050 5000
+Wire Wire Line
+	2700 3350 4750 3350
+Wire Wire Line
+	3500 3150 6400 3150
+$Comp
+L D D5
+U 1 1 558499A4
+P 3350 3150
+F 0 "D5" H 3350 3250 50  0000 C CNN
+F 1 "1N4007" H 3350 3050 50  0000 C CNN
+F 2 "" H 3350 3150 60  0000 C CNN
+F 3 "" H 3350 3150 60  0000 C CNN
+	1    3350 3150
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	3200 3150 1750 3150
 $EndSCHEMATC
