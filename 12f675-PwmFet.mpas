@@ -35,6 +35,7 @@ var
    LED1:sbit at GP2_bit;
    PWM_SIG:sbit at GP0_bit;
    VOut5:sbit at GP5_bit;     // pin 2
+   VCharge:sbit at GP4_bit;   // pin 3
    PWM_TICK, ON_PWM, VOL_PWM:byte;
    TICK_1000:Byte;
    
@@ -52,6 +53,7 @@ var
    short_count:Byte;
    short_check:Boolean;
    vTarget:word;
+   LED_TMCount:byte;
    
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
@@ -113,9 +115,11 @@ begin
      short_count:=cShort_Recover*2;
      short_check:=False;
      TICK_1000:=0;
+     LED_TMCount:=0;
      
      OPTION_REG:=%01010001;        // ~1KHz @ 4MHz, enable weak pull-up
      WPU5_bit:=1;
+     WPU4_bit:=1;
 
      TMR0IE_bit:=1;
      PEIE_bit:=1;
@@ -152,6 +156,8 @@ begin
                end else if adc_vol>vTarget then begin
                  if VOL_PWM>0 then
                    Dec(VOL_PWM);
+                 if VCharge=0 then
+                   VOL_PWM:=0;
                end;
                short_check:=Delay1ms(short_Timer,short_count);
                if short_check then
@@ -172,14 +178,23 @@ begin
              end;
          end;
 
-         if (VOL_PWM=PWM_MAX) or (VOL_PWM=0) then
-           LED1_tm:=128;
+         if (VOL_PWM=PWM_MAX) or (VOL_PWM=0) then begin
+           if (VCharge=0) and (VOL_PWM=0) then begin
+             LED_TMCount:=1;
+             LED1_tm:=240;
+           end else
+               LED1_tm:=128;
+         end;
 
          if not LED1_Toggle then begin
            LED1_Toggle:=True;
            LED1_Timer:=TICK_1000;
          end;
-         if LED1_Toggle and Delay1ms(LED1_Timer,LED1_tm) then
-           LED1:=not LED1;
+         if LED1_Toggle and Delay1ms(LED1_Timer,LED1_tm) then begin
+           if LED_TMCount>0 then
+             Dec(LED_TMCount);
+           if LED_TMCount=0 then
+             LED1:=not LED1;
+         end;
      end;
 end.
