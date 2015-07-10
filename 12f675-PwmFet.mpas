@@ -117,7 +117,7 @@ begin
      TICK_1000:=0;
      LED_TMCount:=0;
      
-     OPTION_REG:=%01010001;        // ~1KHz @ 4MHz, enable weak pull-up
+     OPTION_REG:=%01010000;        // ~2KHz @ 4MHz, enable weak pull-up
      WPU5_bit:=1;
      WPU4_bit:=1;
 
