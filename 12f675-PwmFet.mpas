@@ -22,7 +22,9 @@ program _12f675_PwmFet;
 
 const
    c138 = 942;    // 13.8 * 1024 / 15
-   c051 = 348;    // 5.1 & 1024 / 15
+   c118 = 805;    // 11.8 * 1024 / 15
+   c051 = 348;    // 5.1 * 1024 / 15
+   c043 = 297;    // 4.36 * 1024 / 15
    cLow = 21;    // 0.3 * 1024 / 15
    { 4MHz }
    PWM_MAX = 255;   // 1000000 / 4 / 255
@@ -34,8 +36,9 @@ const
 var
    LED1:sbit at GP2_bit;
    PWM_SIG:sbit at GP0_bit;
-   VOut5:sbit at GP5_bit;     // pin 2
+   VOut5:sbit at GP3_bit;     // pin 4
    VCharge:sbit at GP4_bit;   // pin 3
+   Sig_VSE:sbit at GP5_bit;   // pin 5
    PWM_TICK, ON_PWM, VOL_PWM:byte;
    TICK_1000:Byte;
    
@@ -53,6 +56,7 @@ var
    short_count:Byte;
    short_check:Boolean;
    vTarget:word;
+   VSE_LO:word;
    LED_TMCount:byte;
    
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
@@ -105,6 +109,7 @@ begin
      TRISIO0_bit:=0;
      TRISIO1_bit:=1;
      TRISIO2_bit:=0;
+     TRISIO5_bit:=0;  // Sig_VSE
      LED1:=0;
      PWM_SIG:=1;
      LED1_tm:=250;
@@ -118,7 +123,7 @@ begin
      LED_TMCount:=0;
      
      OPTION_REG:=%01010000;        // ~2KHz @ 4MHz, enable weak pull-up
-     WPU5_bit:=1;
+     //WPU5_bit:=1;
      WPU4_bit:=1;
 
      TMR0IE_bit:=1;
@@ -136,14 +141,23 @@ begin
      
      Delay_10ms;
      
-     if VOut5=0 then
-       vTarget:=c051
-       else
-         vTarget:=c138;
+     if VOut5=0 then begin
+       vTarget:=c051;
+       VSE_LO:=c043;
+     end else begin
+       vTarget:=c138;
+       VSE_LO:=c118;
+     end;
      
      while True do begin
+         adc_vol:=ADC_Read(1);
+         // Solar Engine
+         if adc_vol>=VSE_LO then
+           Sig_VSE:=1
+           else
+             Sig_VSE:=0;
+         // PWM
          if (not out_short) and Delay1ms(ADC_Timer,1) then begin
-             adc_vol:=ADC_Read(1);
              if (VOL_PWM>PWM_LOW) and (adc_vol<cLow) and short_check then begin
                VOL_PWM:=0;
                out_short:=True;
