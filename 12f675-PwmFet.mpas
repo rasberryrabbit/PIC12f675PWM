@@ -22,8 +22,11 @@ program _12f675_PwmFet;
 
 const
    c138 = 942;    // 13.8 * 1024 / 15
+   c123 = 839;    // 12.3 * 1024 / 15
    c118 = 805;    // 11.8 * 1024 / 15
+   c108 = 737;    // 10.8 * 1024 / 15
    c051 = 348;    // 5.1 * 1024 / 15
+   c045 = 310;    // 4.54 * 1024 / 15
    c043 = 297;    // 4.36 * 1024 / 15
    cLow = 21;    // 0.3 * 1024 / 15
    { 4MHz }
@@ -56,8 +59,11 @@ var
    short_count:Byte;
    short_check:Boolean;
    vTarget:word;
+   VSE_HI:word;
    VSE_LO:word;
    LED_TMCount:byte;
+   VSE_Timer:Byte;
+   VSE_LO_HIT:Byte;
    
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
@@ -121,8 +127,9 @@ begin
      short_check:=False;
      TICK_1000:=0;
      LED_TMCount:=0;
+     VSE_LO_HIT:=0;
      
-     OPTION_REG:=%01010000;        // ~2KHz @ 4MHz, enable weak pull-up
+     OPTION_REG:=%01010001;        // ~1KHz @ 4MHz, enable weak pull-up
      //WPU5_bit:=1;
      WPU4_bit:=1;
 
@@ -138,26 +145,36 @@ begin
      LED1_Timer:=TICK_1000;
      ADC_Timer:=TICK_1000;
      short_Timer:=TICK_1000;
+     VSE_Timer:=TICK_1000;
+     Sig_VSE:=0;
      
      Delay_10ms;
      
      if VOut5=0 then begin
        vTarget:=c051;
-       VSE_LO:=c043;
+       VSE_HI:=c051;
      end else begin
        vTarget:=c138;
-       VSE_LO:=c118;
+       VSE_HI:=c138;
      end;
-     
+
      while True do begin
+         if Delay1ms(VSE_Timer,10) then
+           VSE_LO_HIT:=0;
          adc_vol:=ADC_Read(1);
          // Solar Engine
-         if adc_vol>=VSE_LO then
-           Sig_VSE:=1
-           else
-             Sig_VSE:=0;
+           if adc_vol>=VSE_HI then
+             Sig_VSE:=1
+             else begin
+               if VSE_LO_HIT<11 then
+                 Sig_VSE:=0
+                 else
+                   Sig_VSE:=1;
+               Inc(VSE_LO_HIT);
+             end;
          // PWM
          if (not out_short) and Delay1ms(ADC_Timer,1) then begin
+             adc_vol:=ADC_Read(1);
              if (VOL_PWM>PWM_LOW) and (adc_vol<cLow) and short_check then begin
                VOL_PWM:=0;
                out_short:=True;
@@ -210,5 +227,6 @@ begin
            if LED_TMCount=0 then
              LED1:=not LED1;
          end;
+
      end;
 end.
