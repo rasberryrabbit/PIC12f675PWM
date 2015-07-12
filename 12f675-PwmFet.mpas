@@ -34,7 +34,7 @@ const
    PWM_LOW = 0;
    TMR1L_LOAD=$38; // 1000000 / 1000
    TMR1H_LOAD=$fc;
-   cShort_Recover = 14;
+   cShort_Recover = 28;
 
 var
    LED1:sbit at GP2_bit;
@@ -59,11 +59,13 @@ var
    short_count:Byte;
    short_check:Boolean;
    vTarget:word;
+   
    VSE_HI:word;
    VSE_LO:word;
    LED_TMCount:byte;
    VSE_Timer:Byte;
    VSE_LO_HIT:Byte;
+   VSE_Lo_Reset:Byte;
    
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
@@ -146,6 +148,7 @@ begin
      ADC_Timer:=TICK_1000;
      short_Timer:=TICK_1000;
      VSE_Timer:=TICK_1000;
+     VSE_Lo_Reset:=0;
      Sig_VSE:=0;
      
      Delay_10ms;
@@ -159,18 +162,33 @@ begin
      end;
 
      while True do begin
-         if Delay1ms(VSE_Timer,40) then
-           VSE_LO_HIT:=0;
+         if Delay1ms(VSE_Timer,20) then begin
+           if VSE_LO_HIT>15 then
+             VSE_LO_HIT:=VSE_LO_HIT-16
+             else
+               VSE_LO_HIT:=0;
+           // Reset VSE low state every 4 seconds
+           Inc(VSE_Lo_Reset);
+           if VSE_Lo_Reset>200 then begin
+             VSE_LO_HIT:=0;
+             VSE_Lo_Reset:=0;
+           end;
+         end;
          adc_vol:=ADC_Read(1);
          // Solar Engine
            if adc_vol>=VSE_HI then
              Sig_VSE:=1
              else begin
-               if VSE_LO_HIT<30 then
+               if VSE_LO_HIT<16 then
                  Sig_VSE:=0
-                 else
-                   Sig_VSE:=1;
-               Inc(VSE_LO_HIT);
+                 else begin
+                   if not out_short then
+                     Sig_VSE:=1
+                     else
+                     Sig_VSE:=0;
+                 end;
+               if VSE_LO_HIT<255 then
+                 Inc(VSE_LO_HIT);
              end;
          // PWM
          if (not out_short) and Delay1ms(ADC_Timer,1) then begin
@@ -197,6 +215,7 @@ begin
              end;
          end else
          if out_short then begin
+             Sig_VSE:=0;
              if Delay1ms(out_timer,100) then begin
                Dec(out_488);
                if out_488=0 then begin
