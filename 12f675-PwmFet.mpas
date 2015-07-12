@@ -159,14 +159,14 @@ begin
      end;
 
      while True do begin
-         if Delay1ms(VSE_Timer,10) then
+         if Delay1ms(VSE_Timer,40) then
            VSE_LO_HIT:=0;
          adc_vol:=ADC_Read(1);
          // Solar Engine
            if adc_vol>=VSE_HI then
              Sig_VSE:=1
              else begin
-               if VSE_LO_HIT<11 then
+               if VSE_LO_HIT<30 then
                  Sig_VSE:=0
                  else
                    Sig_VSE:=1;

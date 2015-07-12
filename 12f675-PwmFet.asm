@@ -254,10 +254,10 @@ L__main25:
 L__main26:
 ;12f675-PwmFet.mpas,161 :: 		while True do begin
 L__main28:
-;12f675-PwmFet.mpas,162 :: 		if Delay1ms(VSE_Timer,10) then
+;12f675-PwmFet.mpas,162 :: 		if Delay1ms(VSE_Timer,40) then
 	MOVLW      _VSE_Timer+0
 	MOVWF      FARG_Delay1ms_t+0
-	MOVLW      10
+	MOVLW      40
 	MOVWF      FARG_Delay1ms_limit+0
 	CALL       _Delay1ms+0
 	MOVF       R0+0, 0
@@ -289,8 +289,8 @@ L__main96:
 	GOTO       L__main37
 ;12f675-PwmFet.mpas,168 :: 		else begin
 L__main36:
-;12f675-PwmFet.mpas,169 :: 		if VSE_LO_HIT<11 then
-	MOVLW      11
+;12f675-PwmFet.mpas,169 :: 		if VSE_LO_HIT<30 then
+	MOVLW      30
 	SUBWF      _VSE_LO_HIT+0, 0
 	BTFSC      STATUS+0, 0
 	GOTO       L__main39
