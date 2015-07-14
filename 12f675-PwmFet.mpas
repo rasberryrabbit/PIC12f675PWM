@@ -21,20 +21,25 @@ program _12f675_PwmFet;
 }
 
 const
-   c138 = 942;    // 13.8 * 1024 / 15
-   c123 = 839;    // 12.3 * 1024 / 15
-   c118 = 805;    // 11.8 * 1024 / 15
-   c108 = 737;    // 10.8 * 1024 / 15
-   c051 = 348;    // 5.1 * 1024 / 15
-   c045 = 310;    // 4.54 * 1024 / 15
-   c043 = 297;    // 4.36 * 1024 / 15
-   cLow = 21;    // 0.3 * 1024 / 15
+   c160 = 931;   // 16.0 * 1024 / 17.6
+   c138 = 803;   // 13.8 * 1024 / 17.6
+   c123 = 716;   // 12.3 * 1024 / 17.6
+   c118 = 686;   // 11.8 * 1024 / 17.6
+   c108 = 628;   // 10.8 * 1024 / 17.6
+   c051 = 297;   // 5.1 * 1024 / 17.6
+   c046 = 270;   // 4.63 * 1024 / 17.6
+   c045 = 264;   // 4.54 * 1024 / 17.6
+   c043 = 254;   // 4.36 * 1024 / 17.6
+   cLow = 17;    // 0.3 * 1024 / 17.6
    { 4MHz }
    PWM_MAX = 255;   // 1000000 / 4 / 255
    PWM_LOW = 0;
    TMR1L_LOAD=$38; // 1000000 / 1000
    TMR1H_LOAD=$fc;
    cShort_Recover = 28;
+   
+   VSE_CHECK_INTERVAL = 125;
+   VSE_LO_HIT_LIMIT = 8;      // 3300uF
 
 var
    LED1:sbit at GP2_bit;
@@ -66,6 +71,7 @@ var
    VSE_Timer:Byte;
    VSE_LO_HIT:Byte;
    VSE_Lo_Reset:Byte;
+   VSE_CONN:Boolean;
    
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
@@ -150,6 +156,7 @@ begin
      VSE_Timer:=TICK_1000;
      VSE_Lo_Reset:=0;
      Sig_VSE:=0;
+     VSE_CONN:=False;
      
      Delay_10ms;
      
@@ -162,31 +169,34 @@ begin
      end;
 
      while True do begin
-         if Delay1ms(VSE_Timer,20) then begin
-           if VSE_LO_HIT>15 then
-             VSE_LO_HIT:=VSE_LO_HIT-16
-             else
-               VSE_LO_HIT:=0;
-           // Reset VSE low state every 4 seconds
+         // Solar Engine
+         {
+           If load is low resistance, PV voltage is low to load resistance
+           and load current is also limited. This removes that problem.
+           Charge from PV and discharge to load, it keep high voltage
+           at low resistance load.
+           If too low current charge and discharge function is ignored,
+           direct connect to PV source.
+           lower than 3300uF capacitor, VSE_LO_HIT_LIMIT must be increased.
+           It is not effecient than MPPT.
+         }
+         if Delay1ms(VSE_Timer,VSE_CHECK_INTERVAL) then begin
+           VSE_CONN:=VSE_LO_HIT<VSE_LO_HIT_LIMIT;
+           VSE_LO_HIT:=0;
            Inc(VSE_Lo_Reset);
-           if VSE_Lo_Reset>200 then begin
-             VSE_LO_HIT:=0;
+           if VSE_Lo_Reset>31 then begin
+             VSE_CONN:=False;
              VSE_Lo_Reset:=0;
            end;
          end;
          adc_vol:=ADC_Read(1);
-         // Solar Engine
            if adc_vol>=VSE_HI then
              Sig_VSE:=1
              else begin
-               if VSE_LO_HIT<16 then
-                 Sig_VSE:=0
-                 else begin
-                   if not out_short then
-                     Sig_VSE:=1
-                     else
-                     Sig_VSE:=0;
-                 end;
+               if VSE_CONN then
+                 Sig_VSE:=1
+                 else
+                 Sig_VSE:=0;
                if VSE_LO_HIT<255 then
                  Inc(VSE_LO_HIT);
              end;
