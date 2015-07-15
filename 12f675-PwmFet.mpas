@@ -160,46 +160,26 @@ begin
      
      Delay_10ms;
      
-     if VOut5=0 then begin
-       vTarget:=c051;
-       VSE_HI:=c051;
-     end else begin
-       vTarget:=c138;
-       VSE_HI:=c138;
-     end;
-
      while True do begin
+         if VOut5=0 then begin
+           vTarget:=c051;
+           VSE_HI:=c051;
+         end else begin
+           vTarget:=c138;
+           VSE_HI:=c138;
+         end;
          // Solar Engine
          {
            If load is low resistance, PV voltage is low to load resistance
            and load current is also limited. This removes that problem.
            Charge from PV and discharge to load, it keep high voltage
            at low resistance load.
-           If too low current charge and discharge function is ignored,
-           direct connect to PV source.
-           lower than 3300uF capacitor, VSE_LO_HIT_LIMIT must be increased.
-           It is not effecient than MPPT.
          }
-         if Delay1ms(VSE_Timer,VSE_CHECK_INTERVAL) then begin
-           VSE_CONN:=VSE_LO_HIT<VSE_LO_HIT_LIMIT;
-           VSE_LO_HIT:=0;
-           Inc(VSE_Lo_Reset);
-           if VSE_Lo_Reset>31 then begin
-             VSE_CONN:=False;
-             VSE_Lo_Reset:=0;
-           end;
-         end;
          adc_vol:=ADC_Read(1);
            if adc_vol>=VSE_HI then
              Sig_VSE:=1
-             else begin
-               if VSE_CONN then
-                 Sig_VSE:=1
-                 else
-                 Sig_VSE:=0;
-               if VSE_LO_HIT<255 then
-                 Inc(VSE_LO_HIT);
-             end;
+             else 
+               Sig_VSE:=0;
          // PWM
          if (not out_short) and Delay1ms(ADC_Timer,1) then begin
              adc_vol:=ADC_Read(1);
