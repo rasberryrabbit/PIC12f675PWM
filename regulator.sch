@@ -89,8 +89,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "PWM Regulator v3"
-Date "2015-07-14"
-Rev "1.2f"
+Date "2015-07-18"
+Rev "1.2g"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -365,52 +365,6 @@ F 3 "" H 2550 1850 60  0000 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L CP C4
-U 1 1 559FC9C7
-P 5700 4950
-F 0 "C4" H 5725 5050 50  0000 L CNN
-F 1 "3300u" H 5725 4850 50  0000 L CNN
-F 2 "" H 5738 4800 30  0000 C CNN
-F 3 "" H 5700 4950 60  0000 C CNN
-	1    5700 4950
-	1    0    0    -1  
-$EndComp
-$Comp
-L C C5
-U 1 1 559FCBD8
-P 6350 4950
-F 0 "C5" H 6375 5050 50  0000 L CNN
-F 1 "0.01u" H 6375 4850 50  0000 L CNN
-F 2 "" H 6388 4800 30  0000 C CNN
-F 3 "" H 6350 4950 60  0000 C CNN
-	1    6350 4950
-	1    0    0    -1  
-$EndComp
-$Comp
-L Q_NMOS_GDS-RESCUE-regulator Q5
-U 1 1 559FCD3F
-P 7250 5400
-F 0 "Q5" H 7550 5350 50  0000 R CNN
-F 1 "BUK9511-55A (Logic Level)" H 8550 5550 50  0000 R CNN
-F 2 "" H 7450 5500 29  0000 C CNN
-F 3 "" H 7250 5400 60  0000 C CNN
-	1    7250 5400
-	1    0    0    -1  
-$EndComp
-$Comp
-L R R7
-U 1 1 559FD8A6
-P 6750 5400
-F 0 "R7" V 6830 5400 50  0000 C CNN
-F 1 "1k" V 6750 5400 50  0000 C CNN
-F 2 "" V 6680 5400 30  0000 C CNN
-F 3 "" H 6750 5400 30  0000 C CNN
-	1    6750 5400
-	0    1    1    0   
-$EndComp
-Text GLabel 8700 4900 2    60   Output ~ 0
-E-
-$Comp
 L R R8
 U 1 1 55A0233C
 P 3500 2350
@@ -423,16 +377,8 @@ F 3 "" H 3500 2350 30  0000 C CNN
 $EndComp
 Text Label 3850 2550 2    60   ~ 0
 5Vout(GND)
-Text Label 4750 5400 2    60   ~ 0
-SolarEngine
 Text Notes 3750 3950 2    60   ~ 0
 GP3 (GND) = 5v\nGP4 (GND) = Check Charging
-Text GLabel 5000 5600 0    60   Input ~ 0
--
-Text GLabel 8700 4550 2    60   Output ~ 0
-+
-Text GLabel 5000 4550 0    60   Input ~ 0
-+
 Wire Wire Line
 	4800 3700 4800 3900
 Wire Wire Line
@@ -557,31 +503,43 @@ Wire Wire Line
 	3200 2350 3200 2050
 Connection ~ 3200 2050
 Wire Wire Line
-	3850 3250 4050 3250
+	3850 3250 4000 3250
+$Comp
+L R R7
+U 1 1 55A9A097
+P 6450 4700
+F 0 "R7" V 6530 4700 50  0000 C CNN
+F 1 "1k" V 6450 4700 50  0000 C CNN
+F 2 "" V 6380 4700 30  0000 C CNN
+F 3 "" H 6450 4700 30  0000 C CNN
+	1    6450 4700
+	0    -1   -1   0   
+$EndComp
 Wire Wire Line
-	4050 3250 4050 5400
+	6300 4700 4000 4700
 Wire Wire Line
-	7350 5200 7350 4900
+	4000 4700 4000 3250
+$Comp
+L Q_NMOS_GDS-RESCUE-regulator Q5
+U 1 1 55A9A277
+P 6900 4700
+F 0 "Q5" V 7150 4950 50  0000 R CNN
+F 1 "BUK9511-55A (Logic Level)" H 8200 4750 50  0000 R CNN
+F 2 "" H 7100 4800 29  0000 C CNN
+F 3 "" H 6900 4700 60  0000 C CNN
+	1    6900 4700
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	7350 4900 8700 4900
-Wire Wire Line
-	6900 5400 7050 5400
-Wire Wire Line
-	5000 4550 8700 4550
-Wire Wire Line
-	5000 5600 7350 5600
-Wire Wire Line
-	5700 5100 5700 5600
-Connection ~ 5700 5600
-Wire Wire Line
-	5700 4800 5700 4550
-Connection ~ 5700 4550
-Wire Wire Line
-	6350 5100 6350 5600
-Connection ~ 6350 5600
-Wire Wire Line
-	6350 4800 6350 4550
-Connection ~ 6350 4550
-Wire Wire Line
-	4050 5400 6600 5400
+	6700 4700 6600 4700
+Wire Notes Line
+	8350 4300 8350 5050
+Wire Notes Line
+	8350 5050 6200 5050
+Wire Notes Line
+	6200 5050 6200 4300
+Wire Notes Line
+	6200 4300 8350 4300
+Text Notes 6250 4400 0    60   ~ 0
+Replace D1, PWM Sync
 $EndSCHEMATC

@@ -46,7 +46,7 @@ var
    PWM_SIG:sbit at GP0_bit;
    VOut5:sbit at GP3_bit;     // pin 4
    VCharge:sbit at GP4_bit;   // pin 3
-   Sig_VSE:sbit at GP5_bit;   // pin 5
+   PWM_SYNC:sbit at GP5_bit;   // pin 5
    PWM_TICK, ON_PWM, VOL_PWM:byte;
    TICK_1000:Byte;
    
@@ -64,15 +64,9 @@ var
    short_count:Byte;
    short_check:Boolean;
    vTarget:word;
-   
-   VSE_HI:word;
-   VSE_LO:word;
    LED_TMCount:byte;
-   VSE_Timer:Byte;
-   VSE_LO_HIT:Byte;
-   VSE_Lo_Reset:Byte;
-   VSE_CONN:Boolean;
-   
+
+
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
      if T0IF_bit=1 then begin
@@ -83,11 +77,13 @@ begin
            TMR0:=ON_PWM
          else begin
            TMR0:=PWM_MAX-ON_PWM;
+           PWM_SYNC:=0;
            PWM_SIG:=0;
          end;
        end else begin
          TMR0:=ON_PWM;
          PWM_SIG:=1;
+         PWM_SYNC:=1;
        end;
        T0IF_bit:=0;
      end;
@@ -135,8 +131,7 @@ begin
      short_check:=False;
      TICK_1000:=0;
      LED_TMCount:=0;
-     VSE_LO_HIT:=0;
-     
+
      OPTION_REG:=%01010001;        // ~1KHz @ 4MHz, enable weak pull-up
      //WPU5_bit:=1;
      WPU4_bit:=1;
@@ -153,35 +148,17 @@ begin
      LED1_Timer:=TICK_1000;
      ADC_Timer:=TICK_1000;
      short_Timer:=TICK_1000;
-     VSE_Timer:=TICK_1000;
-     VSE_Lo_Reset:=0;
-     Sig_VSE:=0;
-     VSE_CONN:=False;
-     
+
      Delay_10ms;
      
      while True do begin
          if VOut5=0 then begin
            vTarget:=c051;
-           VSE_HI:=c051;
          end else begin
            vTarget:=c138;
-           VSE_HI:=c138;
          end;
-         // Solar Engine
-         {
-           If load is low resistance, PV voltage is low to load resistance
-           and load current is also limited. This removes that problem.
-           Charge from PV and discharge to load, it keep high voltage
-           at low resistance load.
-         }
-         adc_vol:=ADC_Read(1);
-           if adc_vol>=VSE_HI then
-             Sig_VSE:=1
-             else 
-               Sig_VSE:=0;
          // PWM
-         if (not out_short) and Delay1ms(ADC_Timer,1) then begin
+         if (not out_short) and Delay1ms(ADC_Timer,0) then begin
              adc_vol:=ADC_Read(1);
              if (VOL_PWM>PWM_LOW) and (adc_vol<cLow) and short_check then begin
                VOL_PWM:=0;
@@ -193,7 +170,7 @@ begin
                  if VOL_PWM<PWM_MAX then
                    Inc(VOL_PWM);
                end else if adc_vol>vTarget then begin
-                 if VOL_PWM>0 then
+                 if VOL_PWM>PWM_LOW then
                    Dec(VOL_PWM);
                  if VCharge=0 then
                    VOL_PWM:=0;
@@ -205,7 +182,6 @@ begin
              end;
          end else
          if out_short then begin
-             Sig_VSE:=0;
              if Delay1ms(out_timer,100) then begin
                Dec(out_488);
                if out_488=0 then begin
