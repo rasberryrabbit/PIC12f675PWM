@@ -38,15 +38,12 @@ const
    TMR1H_LOAD=$fc;
    cShort_Recover = 28;
    
-   VSE_CHECK_INTERVAL = 125;
-   VSE_LO_HIT_LIMIT = 8;      // 3300uF
-
 var
    LED1:sbit at GP2_bit;
    PWM_SIG:sbit at GP0_bit;
    VOut5:sbit at GP3_bit;     // pin 4
    VCharge:sbit at GP4_bit;   // pin 3
-   PWM_SYNC:sbit at GP5_bit;   // pin 5
+   PWM_SYNC:sbit at GP5_bit;   // pin 2
    PWM_TICK, ON_PWM, VOL_PWM:byte;
    TICK_1000:Byte;
    
@@ -119,9 +116,10 @@ begin
      TRISIO0_bit:=0;
      TRISIO1_bit:=1;
      TRISIO2_bit:=0;
-     TRISIO5_bit:=0;  // Sig_VSE
+     TRISIO5_bit:=0;  // PWM_SYNC
      LED1:=0;
      PWM_SIG:=1;
+     PWM_SYNC:=0;
      LED1_tm:=250;
      LED1_Toggle:=True;
      ON_PWM:=0;
