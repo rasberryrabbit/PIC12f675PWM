@@ -36,8 +36,8 @@ const
    PWM_LOW = 0;
    TMR1L_LOAD=$38; // 1000000 / 1000
    TMR1H_LOAD=$fc;
-   cShort_Recover = 14;
-   cAdc_divider = 14;         // It is best divider at 5V.
+   cShort_Recover = 10;
+   cAdc_Limit = 20;
 
 var
    LED1:sbit at GP2_bit;
@@ -54,8 +54,6 @@ var
    LED1_Toggle:Boolean;
    LED1_tm:byte;
    
-   ADC_Timer:Byte;
-   ADC_Delay:Byte;
    out_short:Boolean;
    out_timer:Byte;
    out_488:byte;
@@ -64,7 +62,6 @@ var
    short_check:Boolean;
    vTarget:word;
    LED_TMCount:byte;
-   adc_diff:word;
 
 
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
@@ -132,7 +129,6 @@ begin
      short_check:=False;
      TICK_1000:=0;
      LED_TMCount:=0;
-     ADC_Delay:=0;
 
      OPTION_REG:=%01010000;        // ~2KHz @ 4MHz, enable weak pull-up
      //WPU5_bit:=1;
@@ -148,7 +144,6 @@ begin
      GIE_bit:=1;      // enable Interrupt
       
      LED1_Timer:=TICK_1000;
-     ADC_Timer:=TICK_1000;
      short_Timer:=TICK_1000;
 
      Delay_10ms;
@@ -160,7 +155,7 @@ begin
            vTarget:=c138;
          end;
          // PWM
-         if (not out_short) and Delay1ms(ADC_Timer,ADC_Delay) then begin
+         if (not out_short) then begin
              adc_vol:=ADC_Read(1);
              if (VOL_PWM>PWM_LOW) and (adc_vol<cLow) and short_check then begin
                VOL_PWM:=0;
@@ -169,19 +164,53 @@ begin
                out_488:=10;         // 2 seconds
              end else begin
                if adc_vol<vTarget then begin
-                 adc_diff:=(vTarget-adc_vol) div cAdc_divider;
-                 if VOL_PWM<=PWM_MAX-lo(adc_diff) then
-                   VOL_PWM:=VOL_PWM+lo(adc_diff)
-                   else
-                     VOL_PWM:=PWM_MAX;
+                 while adc_vol<vTarget do begin
+                   if VOL_PWM<PWM_MAX then
+                     Inc(VOL_PWM)
+                     else
+                       break;
+                   adc_vol:=ADC_Read(1);
+                   if adc_vol<=cLow then
+                     break;
+                 end;
+                 if adc_vol>cLow then
+                 while adc_vol>vTarget+cAdc_Limit do begin
+                   if VCharge=0 then
+                     break;
+                   if VOL_PWM>PWM_LOW then
+                     Dec(VOL_PWM)
+                     else
+                       break;
+                   adc_vol:=ADC_Read(1);
+                   if adc_vol<=cLow then
+                     break;
+                 end;
                end else if adc_vol>vTarget then begin
-                 adc_diff:=(adc_vol-vTarget) div cAdc_divider;
-                 if VOL_PWM>=PWM_LOW+lo(adc_diff) then
-                   VOL_PWM:=VOL_PWM-lo(adc_diff)
-                   else
-                     VOL_PWM:=PWM_LOW;
+                 while adc_vol>vTarget do begin
+                   if VCharge=0 then
+                     break;
+                   if VOL_PWM>PWM_LOW then
+                     Dec(VOL_PWM)
+                     else
+                       break;
+                   adc_vol:=ADC_Read(1);
+                   if adc_vol<=cLow then
+                     break;
+                 end;
                  if VCharge=0 then
                    VOL_PWM:=0;
+                 if adc_vol>cLow then
+                 while adc_vol<vTarget-cAdc_Limit do begin
+                   if VCharge=0 then
+                     break;
+                   if VOL_PWM<PWM_MAX then
+                     Inc(VOL_PWM)
+                     else
+                       break;
+                   adc_vol:=ADC_Read(1);
+                   if adc_vol<=cLow then
+                     break;
+                 end;
                end;
                short_check:=Delay1ms(short_Timer,short_count);
                if short_check then
