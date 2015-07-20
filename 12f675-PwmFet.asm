@@ -351,7 +351,7 @@ L__main125:
 	GOTO       L__main50
 ;12f675-PwmFet.mpas,175 :: 		while adc_vol>vTarget+cAdc_Limit do begin
 L__main53:
-	MOVLW      20
+	MOVLW      19
 	ADDWF      _vTarget+0, 0
 	MOVWF      R1+0
 	MOVF       _vTarget+1, 0
@@ -481,7 +481,7 @@ L__main132:
 	GOTO       L__main75
 ;12f675-PwmFet.mpas,194 :: 		while adc_vol<vTarget-cAdc_Limit do begin
 L__main78:
-	MOVLW      20
+	MOVLW      19
 	SUBWF      _vTarget+0, 0
 	MOVWF      R1+0
 	MOVLW      0

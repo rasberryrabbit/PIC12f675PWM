@@ -37,7 +37,7 @@ const
    TMR1L_LOAD=$38; // 1000000 / 1000
    TMR1H_LOAD=$fc;
    cShort_Recover = 10;
-   cAdc_Limit = 20;
+   cAdc_Limit = 19;
 
 var
    LED1:sbit at GP2_bit;
