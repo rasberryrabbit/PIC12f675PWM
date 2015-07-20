@@ -170,46 +170,36 @@ begin
                      else
                        break;
                    adc_vol:=ADC_Read(1);
-                   if adc_vol<=cLow then
-                     break;
                  end;
-                 if adc_vol>cLow then
-                 while adc_vol>vTarget+cAdc_Limit do begin
-                   if VCharge=0 then
-                     break;
-                   if VOL_PWM>PWM_LOW then
-                     Dec(VOL_PWM)
-                     else
-                       break;
-                   adc_vol:=ADC_Read(1);
-                   if adc_vol<=cLow then
-                     break;
+                 if adc_vol>cLow then begin
+                   while adc_vol>vTarget+cAdc_Limit do begin
+                     if VOL_PWM>PWM_LOW then
+                       Dec(VOL_PWM)
+                       else
+                         break;
+                     adc_vol:=ADC_Read(1);
+                   end;
+                   if (VCharge=0) and (adc_vol>=vTarget) then
+                     VOL_PWM:=0;
                  end;
                end else if adc_vol>vTarget then begin
                  while adc_vol>vTarget do begin
-                   if VCharge=0 then
-                     break;
                    if VOL_PWM>PWM_LOW then
                      Dec(VOL_PWM)
                      else
                        break;
                    adc_vol:=ADC_Read(1);
-                   if adc_vol<=cLow then
-                     break;
                  end;
-                 if VCharge=0 then
-                   VOL_PWM:=0;
-                 if adc_vol>cLow then
-                 while adc_vol<vTarget-cAdc_Limit do begin
-                   if VCharge=0 then
-                     break;
-                   if VOL_PWM<PWM_MAX then
-                     Inc(VOL_PWM)
-                     else
-                       break;
-                   adc_vol:=ADC_Read(1);
-                   if adc_vol<=cLow then
-                     break;
+                 if adc_vol>cLow then begin
+                   while adc_vol<vTarget-cAdc_Limit do begin
+                     if VOL_PWM<PWM_MAX then
+                       Inc(VOL_PWM)
+                       else
+                         break;
+                     adc_vol:=ADC_Read(1);
+                   end;
+                   if (VCharge=0) and (adc_vol>=vTarget) then
+                     VOL_PWM:=0;
                  end;
                end;
                short_check:=Delay1ms(short_Timer,short_count);
