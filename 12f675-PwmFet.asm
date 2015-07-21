@@ -61,7 +61,7 @@ L__Interrupt2:
 ;12f675-PwmFet.mpas,88 :: 		Inc(TICK_1000);
 	INCF       _TICK_1000+0, 1
 ;12f675-PwmFet.mpas,89 :: 		TMR1L:=TMR1L_LOAD;
-	MOVLW      56
+	MOVLW      38
 	MOVWF      TMR1L+0
 ;12f675-PwmFet.mpas,90 :: 		TMR1H:=TMR1H_LOAD;
 	MOVLW      252
@@ -207,7 +207,7 @@ _main:
 ;12f675-PwmFet.mpas,140 :: 		TMR1IE_bit:=1;
 	BSF        TMR1IE_bit+0, BitPos(TMR1IE_bit+0)
 ;12f675-PwmFet.mpas,141 :: 		TMR1L:=TMR1L_LOAD;
-	MOVLW      56
+	MOVLW      38
 	MOVWF      TMR1L+0
 ;12f675-PwmFet.mpas,142 :: 		TMR1H:=TMR1H_LOAD;
 	MOVLW      252
@@ -349,21 +349,14 @@ L__main43:
 L__main125:
 	BTFSC      STATUS+0, 0
 	GOTO       L__main50
-;12f675-PwmFet.mpas,175 :: 		while adc_vol>vTarget+cAdc_Limit do begin
+;12f675-PwmFet.mpas,175 :: 		while adc_vol>vTarget{+cAdc_Limit} do begin
 L__main53:
-	MOVLW      19
-	ADDWF      _vTarget+0, 0
-	MOVWF      R1+0
-	MOVF       _vTarget+1, 0
-	BTFSC      STATUS+0, 0
-	ADDLW      1
-	MOVWF      R1+1
 	MOVF       _adc_vol+1, 0
-	SUBWF      R1+1, 0
+	SUBWF      _vTarget+1, 0
 	BTFSS      STATUS+0, 2
 	GOTO       L__main126
 	MOVF       _adc_vol+0, 0
-	SUBWF      R1+0, 0
+	SUBWF      _vTarget+0, 0
 L__main126:
 	BTFSC      STATUS+0, 0
 	GOTO       L__main54
@@ -479,21 +472,13 @@ L__main68:
 L__main132:
 	BTFSC      STATUS+0, 0
 	GOTO       L__main75
-;12f675-PwmFet.mpas,194 :: 		while adc_vol<vTarget-cAdc_Limit do begin
+;12f675-PwmFet.mpas,194 :: 		while adc_vol<vTarget{-cAdc_Limit} do begin
 L__main78:
-	MOVLW      19
-	SUBWF      _vTarget+0, 0
-	MOVWF      R1+0
-	MOVLW      0
-	BTFSS      STATUS+0, 0
-	ADDLW      1
-	SUBWF      _vTarget+1, 0
-	MOVWF      R1+1
-	MOVF       R1+1, 0
+	MOVF       _vTarget+1, 0
 	SUBWF      _adc_vol+1, 0
 	BTFSS      STATUS+0, 2
 	GOTO       L__main133
-	MOVF       R1+0, 0
+	MOVF       _vTarget+0, 0
 	SUBWF      _adc_vol+0, 0
 L__main133:
 	BTFSC      STATUS+0, 0

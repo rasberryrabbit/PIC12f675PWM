@@ -34,10 +34,10 @@ const
    { 4MHz }
    PWM_MAX = 255;   // 1000000 / 4 / 255
    PWM_LOW = 0;
-   TMR1L_LOAD=$38; // 1000000 / 1000
+   TMR1L_LOAD=$26; // 1000000 / 985, 65535-985
    TMR1H_LOAD=$fc;
    cShort_Recover = 10;
-   cAdc_Limit = 19;
+   cAdc_Limit = 20;
 
 var
    LED1:sbit at GP2_bit;
@@ -172,7 +172,7 @@ begin
                    adc_vol:=ADC_Read(1);
                  end;
                  if adc_vol>cLow then begin
-                   while adc_vol>vTarget+cAdc_Limit do begin
+                   while adc_vol>vTarget{+cAdc_Limit} do begin
                      if VOL_PWM>PWM_LOW then
                        Dec(VOL_PWM)
                        else
@@ -191,7 +191,7 @@ begin
                    adc_vol:=ADC_Read(1);
                  end;
                  if adc_vol>cLow then begin
-                   while adc_vol<vTarget-cAdc_Limit do begin
+                   while adc_vol<vTarget{-cAdc_Limit} do begin
                      if VOL_PWM<PWM_MAX then
                        Inc(VOL_PWM)
                        else
