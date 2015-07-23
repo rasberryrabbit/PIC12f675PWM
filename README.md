@@ -6,3 +6,8 @@ I'm using it for solar charging unit.
 1kHz software PWM and 0~90% duty.
 
 This is compiled by Mikro Pascal for PIC 6.0
+
+LED Status.
+1 sec - Normal. Good.
+0.5 sec - Insuffient Input Power.
+0.25 sec - Short on output.
