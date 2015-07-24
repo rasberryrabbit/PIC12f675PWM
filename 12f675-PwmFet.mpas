@@ -38,8 +38,6 @@ const
    PWM_LOW = 0;
    TMR1L_LOAD=$17; // 1000000 / 1000, 65535-1000
    TMR1H_LOAD=$fc;
-   cShort_Recover = 10;
-   cAdc_Limit = 20;
 
 var
    LED1:sbit at GP2_bit;
@@ -52,10 +50,12 @@ var
    LED1_tm:byte;
    vTarget:word;
    Inc_Flag:bit;
+   PWM_FLAG:bit;
 
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
      if T0IF_bit=1 then begin
+       PWM_FLAG:=not PWM_FLAG;
        { PWM MAX 96% }
        if PWM_SIG=1 then begin
          ON_PWM:=VOL_PWM;
@@ -126,7 +126,7 @@ begin
      
      PEIE_bit:=1;
      
-     T1CKPS1_bit:=1;               // timer prescaler 1:4
+     T1CKPS0_bit:=1;               // timer prescaler 1:2
      TMR1CS_bit:=0;
      TMR1IE_bit:=1;
      TMR1L:=TMR1L_LOAD;
@@ -154,19 +154,17 @@ begin
 
      while True do begin
          Read_ADC;
-         if (adc_vol>vTarget) and (((not Inc_Flag) and (adc_vol-vTarget>=15)) or Inc_Flag) then begin
+         if (adc_vol>vTarget) and (((not Inc_Flag) and (adc_vol-vTarget>=18)) or Inc_Flag) then begin
            Inc_Flag:=0;
            if VOL_PWM>PWM_LOW then
-             Dec(VOL_PWM)
-               else
-                 continue;
-         end else if (adc_vol<vTarget) and ((Inc_Flag and (vTarget-adc_vol>=15)) or (not Inc_Flag)) then begin
+             Dec(VOL_PWM);
+         end else if (adc_vol<=vTarget) and ((Inc_Flag and (vTarget-adc_vol>=18)) or (not Inc_Flag)) then begin
            Inc_Flag:=1;
            if VOL_PWM<PWM_MAX then
-             Inc(VOL_PWM)
-             else
-               continue;
+             Inc(VOL_PWM);
          end;
+         if PWM_FLAG then
+           continue;
 
          if (Hi(adc_vol)=0) and (Lo(adc_vol)<=cLow) then
            LED1_tm:=64
