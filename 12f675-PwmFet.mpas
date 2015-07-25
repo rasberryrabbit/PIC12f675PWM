@@ -49,7 +49,6 @@ var
    adc_vol:word;
    LED1_tm:byte;
    vTarget:word;
-   Inc_Flag:bit;
 
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
@@ -117,7 +116,6 @@ begin
      ON_PWM:=0;
      VOL_PWM:=0;
      TICK_1000:=0;
-     Inc_Flag:=0;
 
      OPTION_REG:=%01010000;        // ~1KHz @ 4MHz, enable weak pull-up
      TMR0IE_bit:=1;
@@ -153,11 +151,9 @@ begin
      while True do begin
          Read_ADC;
          if (adc_vol>vTarget) then begin
-           Inc_Flag:=0;
            if VOL_PWM>PWM_LOW then
              Dec(VOL_PWM);
-         end else if (adc_vol<=vTarget) then begin
-           Inc_Flag:=1;
+         end else if (adc_vol<vTarget) then begin
            if VOL_PWM<PWM_MAX then
              Inc(VOL_PWM);
          end;
