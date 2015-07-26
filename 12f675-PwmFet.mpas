@@ -156,20 +156,21 @@ begin
      while True do begin
          Read_ADC;
          if (adc_vol>vTarget) then begin
-           if VOL_PWM>PWM_LOW then
-             Dec(VOL_PWM);
-           if adc_vol>=vTarget+14 then
              repeat
                if VOL_PWM>PWM_LOW then
-                 Dec(VOL_PWM);
-               Delay_22us;
+                 Dec(VOL_PWM)
+                   else break;
+               Delay_1us;
                Read_ADC;
              until adc_vol<=vTarget;
          end else if (adc_vol<vTarget) then begin
-           if VOL_PWM<PWM_MAX then
-             Inc(VOL_PWM)
-             else if (Hi(adc_vol)=0) and (Lo(adc_vol)<c025) then
-               ADON_bit:=0;
+             repeat
+               if VOL_PWM<PWM_MAX then
+                 Inc(VOL_PWM)
+                   else break;
+               Delay_22us;
+               Read_ADC;
+             until adc_vol>=vTarget;
          end;
 
          if (Hi(adc_vol)=0) and (Lo(adc_vol)<=cLow) then

@@ -108,7 +108,7 @@ L__Interrupt21:
 L__Interrupt17:
 ;12f675-PwmFet.mpas,91 :: 		end;
 L_end_Interrupt:
-L__Interrupt73:
+L__Interrupt69:
 	MOVF       ___savePCLATH+0, 0
 	MOVWF      PCLATH+0
 	SWAPF      ___saveSTATUS+0, 0
@@ -244,110 +244,90 @@ L__main36:
 	MOVF       _adc_vol+1, 0
 	SUBWF      _vTarget+1, 0
 	BTFSS      STATUS+0, 2
-	GOTO       L__main76
+	GOTO       L__main72
 	MOVF       _adc_vol+0, 0
 	SUBWF      _vTarget+0, 0
-L__main76:
+L__main72:
 	BTFSC      STATUS+0, 0
 	GOTO       L__main41
-;12f675-PwmFet.mpas,159 :: 		if VOL_PWM>PWM_LOW then
+;12f675-PwmFet.mpas,159 :: 		repeat
+L__main43:
+;12f675-PwmFet.mpas,160 :: 		if VOL_PWM>PWM_LOW then
 	MOVF       _VOL_PWM+0, 0
 	SUBLW      0
 	BTFSC      STATUS+0, 0
-	GOTO       L__main44
-;12f675-PwmFet.mpas,160 :: 		Dec(VOL_PWM);
+	GOTO       L__main49
+;12f675-PwmFet.mpas,161 :: 		Dec(VOL_PWM)
 	DECF       _VOL_PWM+0, 1
-L__main44:
-;12f675-PwmFet.mpas,161 :: 		if adc_vol>=vTarget+14 then
-	MOVLW      14
-	ADDWF      _vTarget+0, 0
-	MOVWF      R1+0
-	MOVF       _vTarget+1, 0
-	BTFSC      STATUS+0, 0
-	ADDLW      1
-	MOVWF      R1+1
-	MOVF       R1+1, 0
-	SUBWF      _adc_vol+1, 0
-	BTFSS      STATUS+0, 2
-	GOTO       L__main77
-	MOVF       R1+0, 0
-	SUBWF      _adc_vol+0, 0
-L__main77:
-	BTFSS      STATUS+0, 0
-	GOTO       L__main47
-;12f675-PwmFet.mpas,162 :: 		repeat
+	GOTO       L__main50
+;12f675-PwmFet.mpas,162 :: 		else break;
 L__main49:
-;12f675-PwmFet.mpas,163 :: 		if VOL_PWM>PWM_LOW then
-	MOVF       _VOL_PWM+0, 0
-	SUBLW      0
-	BTFSC      STATUS+0, 0
-	GOTO       L__main55
-;12f675-PwmFet.mpas,164 :: 		Dec(VOL_PWM);
-	DECF       _VOL_PWM+0, 1
-L__main55:
-;12f675-PwmFet.mpas,165 :: 		Delay_22us;
-	CALL       _Delay_22us+0
-;12f675-PwmFet.mpas,166 :: 		Read_ADC;
+	GOTO       L__main45
+L__main50:
+;12f675-PwmFet.mpas,163 :: 		Delay_1us;
+	CALL       _Delay_1us+0
+;12f675-PwmFet.mpas,164 :: 		Read_ADC;
 	CALL       _Read_ADC+0
-;12f675-PwmFet.mpas,167 :: 		until adc_vol<=vTarget;
+;12f675-PwmFet.mpas,165 :: 		until adc_vol<=vTarget;
 	MOVF       _adc_vol+1, 0
 	SUBWF      _vTarget+1, 0
 	BTFSS      STATUS+0, 2
-	GOTO       L__main78
+	GOTO       L__main73
 	MOVF       _adc_vol+0, 0
 	SUBWF      _vTarget+0, 0
-L__main78:
+L__main73:
 	BTFSC      STATUS+0, 0
-	GOTO       L__main52
-	GOTO       L__main49
-L__main52:
-L__main47:
-;12f675-PwmFet.mpas,168 :: 		end else if (adc_vol<vTarget) then begin
+	GOTO       L__main46
+	GOTO       L__main43
+L__main46:
+L__main45:
+;12f675-PwmFet.mpas,166 :: 		end else if (adc_vol<vTarget) then begin
 	GOTO       L__main42
 L__main41:
 	MOVF       _vTarget+1, 0
 	SUBWF      _adc_vol+1, 0
 	BTFSS      STATUS+0, 2
-	GOTO       L__main79
+	GOTO       L__main74
 	MOVF       _vTarget+0, 0
 	SUBWF      _adc_vol+0, 0
-L__main79:
+L__main74:
 	BTFSC      STATUS+0, 0
-	GOTO       L__main58
-;12f675-PwmFet.mpas,169 :: 		if VOL_PWM<PWM_MAX then
+	GOTO       L__main52
+;12f675-PwmFet.mpas,167 :: 		repeat
+L__main54:
+;12f675-PwmFet.mpas,168 :: 		if VOL_PWM<PWM_MAX then
 	MOVLW      255
 	SUBWF      _VOL_PWM+0, 0
 	BTFSC      STATUS+0, 0
-	GOTO       L__main61
-;12f675-PwmFet.mpas,170 :: 		Inc(VOL_PWM)
+	GOTO       L__main60
+;12f675-PwmFet.mpas,169 :: 		Inc(VOL_PWM)
 	INCF       _VOL_PWM+0, 1
-	GOTO       L__main62
-;12f675-PwmFet.mpas,171 :: 		else if (Hi(adc_vol)=0) and (Lo(adc_vol)<c025) then
+	GOTO       L__main61
+;12f675-PwmFet.mpas,170 :: 		else break;
+L__main60:
+	GOTO       L__main56
 L__main61:
-	MOVF       _adc_vol+1, 0
-	XORLW      0
-	MOVLW      255
+;12f675-PwmFet.mpas,171 :: 		Delay_22us;
+	CALL       _Delay_22us+0
+;12f675-PwmFet.mpas,172 :: 		Read_ADC;
+	CALL       _Read_ADC+0
+;12f675-PwmFet.mpas,173 :: 		until adc_vol>=vTarget;
+	MOVF       _vTarget+1, 0
+	SUBWF      _adc_vol+1, 0
 	BTFSS      STATUS+0, 2
-	MOVLW      0
-	MOVWF      R1+0
-	MOVLW      146
+	GOTO       L__main75
+	MOVF       _vTarget+0, 0
 	SUBWF      _adc_vol+0, 0
-	MOVLW      255
+L__main75:
 	BTFSC      STATUS+0, 0
-	MOVLW      0
-	MOVWF      R0+0
-	MOVF       R1+0, 0
-	ANDWF      R0+0, 1
-	BTFSC      STATUS+0, 2
-	GOTO       L__main64
-;12f675-PwmFet.mpas,172 :: 		ADON_bit:=0;
-	BCF        ADON_bit+0, BitPos(ADON_bit+0)
-L__main64:
-L__main62:
-;12f675-PwmFet.mpas,173 :: 		end;
-L__main58:
+	GOTO       L__main57
+	GOTO       L__main54
+L__main57:
+L__main56:
+;12f675-PwmFet.mpas,174 :: 		end;
+L__main52:
 L__main42:
-;12f675-PwmFet.mpas,175 :: 		if (Hi(adc_vol)=0) and (Lo(adc_vol)<=cLow) then
+;12f675-PwmFet.mpas,176 :: 		if (Hi(adc_vol)=0) and (Lo(adc_vol)<=cLow) then
 	MOVF       _adc_vol+1, 0
 	XORLW      0
 	MOVLW      255
@@ -363,31 +343,31 @@ L__main42:
 	MOVF       R1+0, 0
 	ANDWF      R0+0, 1
 	BTFSC      STATUS+0, 2
-	GOTO       L__main67
-;12f675-PwmFet.mpas,176 :: 		LED1_tm:=64
+	GOTO       L__main63
+;12f675-PwmFet.mpas,177 :: 		LED1_tm:=64
 	MOVLW      64
 	MOVWF      _LED1_tm+0
-	GOTO       L__main68
-;12f675-PwmFet.mpas,177 :: 		else if VOL_PWM=PWM_MAX then
-L__main67:
+	GOTO       L__main64
+;12f675-PwmFet.mpas,178 :: 		else if VOL_PWM=PWM_MAX then
+L__main63:
 	MOVF       _VOL_PWM+0, 0
 	XORLW      255
 	BTFSS      STATUS+0, 2
-	GOTO       L__main70
-;12f675-PwmFet.mpas,178 :: 		LED1_tm:=128
+	GOTO       L__main66
+;12f675-PwmFet.mpas,179 :: 		LED1_tm:=128
 	MOVLW      128
 	MOVWF      _LED1_tm+0
-	GOTO       L__main71
-;12f675-PwmFet.mpas,179 :: 		else
-L__main70:
-;12f675-PwmFet.mpas,180 :: 		LED1_tm:=240;
+	GOTO       L__main67
+;12f675-PwmFet.mpas,180 :: 		else
+L__main66:
+;12f675-PwmFet.mpas,181 :: 		LED1_tm:=240;
 	MOVLW      240
 	MOVWF      _LED1_tm+0
-L__main71:
-L__main68:
-;12f675-PwmFet.mpas,181 :: 		end;
+L__main67:
+L__main64:
+;12f675-PwmFet.mpas,182 :: 		end;
 	GOTO       L__main36
-;12f675-PwmFet.mpas,182 :: 		end.
+;12f675-PwmFet.mpas,183 :: 		end.
 L_end_main:
 	GOTO       $+0
 ; end of _main
