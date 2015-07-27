@@ -89,8 +89,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "PWM Regulator v3"
-Date "2015-07-25"
-Rev "1.2h"
+Date "2015-07-27"
+Rev "1.2i"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -157,7 +157,7 @@ L CP1 C2
 U 1 1 5562F717
 P 7550 2350
 F 0 "C2" H 7575 2450 50  0000 L CNN
-F 1 "220u(or Higher)" H 6900 2150 50  0000 L CNN
+F 1 "420u(or Higher, 470uF also good)" H 6950 2000 50  0000 L CNN
 F 2 "" H 7550 2350 60  0000 C CNN
 F 3 "" H 7550 2350 60  0000 C CNN
 	1    7550 2350
@@ -542,4 +542,6 @@ Wire Notes Line
 	6200 4300 8350 4300
 Text Notes 6250 4400 0    60   ~ 0
 Replace D1, PWM Sync
+Text Notes 2600 4250 0    60   ~ 0
+Output 2A -> C2 > 420uF
 $EndSCHEMATC
