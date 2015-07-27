@@ -22,6 +22,12 @@ program _12f675_PwmFet;
 
 {.$define USE_OSCAL}
 
+{ choose only one capacitor value}
+{.$define USE_400UF}
+{.$define USE_420UF}
+{$define USE_470UF}
+
+
 const
    c160 = 931;   // 16.0 * 1024 / 17.6
    c138 = 803;   // 13.8 * 1024 / 17.6
@@ -37,7 +43,24 @@ const
    { 4MHz }
    PWM_MAX = 255;   // 1000000 / 4 / 255
    PWM_LOW = 0;
-   PWM_DELAY = 440; // 420uF, 220 + 100 + 100, 470uF also good.
+   {$ifdef USE_400UF}
+   PWM_DELAY51 = 414; // 440 -> 420uF, 220 + 100 + 100, 470uF also good.
+   PWM_DELAY138 = 153; // PWM_DELAY51 * (5.1 / 13.8)
+   {$endif}
+   {$ifdef USE_420UF}
+   PWM_DELAY51 = 440; // 440 -> 420uF, 220 + 100 + 100, 470uF also good.
+   PWM_DELAY138 = 162; // PWM_DELAY51 * (5.1 / 13.8)
+   {$endif}
+   {$ifdef USE_470UF}
+   PWM_DELAY51 = 492; // 440 -> 420uF, 220 + 100 + 100, 470uF also good.
+   PWM_DELAY138 = 181; // PWM_DELAY51 * (5.1 / 13.8)
+   {$endif}
+   {
+     PWM_DELAY : based on capacitor. 
+     440 @ 420uF
+     419-5 @ 400uF
+     492 @ 470uF
+   }
    TMR1L_LOAD=$17; // 1000000 / 1000, 65535-1000
    TMR1H_LOAD=$fc;
 
@@ -162,7 +185,10 @@ begin
                if VOL_PWM>PWM_LOW then
                  Dec(VOL_PWM)
                    else break;
-               Delay_us(PWM_DELAY);
+               if VOut5=0 then
+                 Delay_us(PWM_DELAY51)
+                 else
+                   Delay_us(PWM_DELAY138);
                Read_ADC;
              until adc_vol<=vTarget;
          end else if (adc_vol<vTarget) then begin
@@ -170,7 +196,10 @@ begin
                if VOL_PWM<PWM_MAX then
                  Inc(VOL_PWM)
                    else break;
-               Delay_us(PWM_DELAY);
+               if VOut5=0 then
+                 Delay_us(PWM_DELAY51)
+                 else
+                   Delay_us(PWM_DELAY138);
                Read_ADC;
              until adc_vol>=vTarget;
          end;
