@@ -22,13 +22,6 @@ program _12f675_PwmFet;
 
 {.$define USE_OSCAL}
 
-{ choose only one capacitor value}
-{.$define USE_300UF}
-{.$define USE_400UF}
-{$define USE_420UF}
-{.$define USE_470UF}
-
-
 const
    c160 = 931;   // 16.0 * 1024 / 17.6
    c138 = 803;   // 13.8 * 1024 / 17.6
@@ -41,32 +34,14 @@ const
    c043 = 254;   // 4.36 * 1024 / 17.6
    c025 = 146;   // 2.5 * 1024 / 17.6
    cLow = 17;    // 0.3 * 1024 / 17.6
-   cDelayDiv = 19;
    { 4MHz }
    PWM_MAX = 255;   // 1000000 / 4 / 255
    PWM_LOW = 0;
-   {$ifdef USE_300UF} // 300uf(100 * 3) and 330uH inductor
-   PWM_DELAY51 = 314 div cDelayDiv; // 314 -> 420uF, 220 + 100 + 100, 470uF also good.
-   PWM_DELAY138 = 116 div cDelayDiv; // 116, PWM_DELAY51 * (5.1 / 13.8)
-   {$endif}
-   {$ifdef USE_400UF}
-   PWM_DELAY51 = 414 div cDelayDiv; // 440 -> 420uF, 220 + 100 + 100, 470uF also good.
-   PWM_DELAY138 = 153 div cDelayDiv; // 153, PWM_DELAY51 * (5.1 / 13.8)
-   {$endif}
-   {$ifdef USE_420UF}
-   PWM_DELAY51 = 440 div cDelayDiv; // 440 -> 420uF, 220 + 100 + 100, 470uF also good.
-   PWM_DELAY138 = 162 div cDelayDiv; // 162, PWM_DELAY51 * (5.1 / 13.8)
-   {$endif}
-   {$ifdef USE_470UF}
-   PWM_DELAY51 = 492 div cDelayDiv; // 492 -> 420uF, 220 + 100 + 100, 470uF also good.
-   PWM_DELAY138 = 181 div cDelayDiv; // 181, PWM_DELAY51 * (5.1 / 13.8)
-   {$endif}
-   {
-     PWM_DELAY : based on capacitor. 
-     440 @ 420uF
-     419-5 @ 400uF
-     492 @ 470uF
-   }
+   
+   { higher capacitor, higher current }
+   PWM_DELAY51 = 5;
+   PWM_DELAY138 = 5;
+
    TMR1L_LOAD=$17; // 1000000 / 1000, 65535-1000
    TMR1H_LOAD=$fc;
 
@@ -191,7 +166,7 @@ begin
                  Dec(VOL_PWM)
                    else break;
                if VOut5=0 then begin
-                 for i:=0 to PWM_DELAY51 div cDelayDiv do begin
+                 for i:=0 to PWM_DELAY51 do begin
                    Read_ADC;
                    if adc_vol>vTarget+29 then begin
                      VOL_PWM:=0;
@@ -200,7 +175,7 @@ begin
                    end
                  end;
                end else begin
-                 for i:=0 to PWM_DELAY138 div cDelayDiv do begin
+                 for i:=0 to PWM_DELAY138 do begin
                    Read_ADC;
                    if adc_vol>vTarget+29 then begin
                      VOL_PWM:=0;
@@ -216,13 +191,13 @@ begin
                  Inc(VOL_PWM)
                    else break;
                if VOut5=0 then begin
-                 for i:=0 to PWM_DELAY51 div cDelayDiv do begin
+                 for i:=0 to PWM_DELAY51 do begin
                    Read_ADC;
                    if adc_vol>vTarget+29 then
                      VOL_PWM:=VOL_PWM shr 4;
                  end;
                end else begin
-                 for i:=0 to PWM_DELAY138 div cDelayDiv do begin
+                 for i:=0 to PWM_DELAY138 do begin
                    Read_ADC;
                    if adc_vol>vTarget+29 then
                      VOL_PWM:=VOL_PWM shr 4;
