@@ -37,7 +37,7 @@ const
    c025 = 146;   // 2.5 * 1024 / 17.6
    cLow = 17;    // 0.3 * 1024 / 17.6
    { 4MHz }
-   PWM_MAX = 140;   // 1000000 / 2 / 140
+   PWM_MAX = 180;   // 1000000 / 2 / 170
    PWM_LOW = 0;
    
    TMR1L_LOAD=$17; // 1000000 / 1000, 65535-1000
@@ -63,7 +63,7 @@ var
 procedure Interrupt(); iv 0x0004; ics ICS_AUTO;
 begin
      if T0IF_bit=1 then begin
-       { PWM MAX 80% }
+       { PWM MAX 84% }
        if PWM_SIG=1 then begin
          ON_PWM:=VOL_PWM;
          if ON_PWM=0 then

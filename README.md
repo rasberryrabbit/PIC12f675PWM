@@ -3,7 +3,7 @@ Simple PWM Regulator.
 I'm using it for solar charging unit.
 
 14.5+ volt source to 13.8v/5v. It can adjust output voltage.
-1kHz software PWM and 0~80% duty.
+1kHz software PWM and 0~84% duty.
 
 This is compiled by Mikro Pascal for PIC 6.4
 
