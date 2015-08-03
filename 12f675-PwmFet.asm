@@ -335,9 +335,7 @@ L__main61:
 L__main79:
 	BTFSC      STATUS+0, 0
 	GOTO       L__main63
-;12f675-PwmFet.mpas,215 :: 		VOL_PWM:=VOL_PWM shr 4;
-	RRF        _VOL_PWM+0, 1
-	BCF        _VOL_PWM+0, 7
+;12f675-PwmFet.mpas,215 :: 		VOL_PWM:=VOL_PWM shr 3;
 	RRF        _VOL_PWM+0, 1
 	BCF        _VOL_PWM+0, 7
 	RRF        _VOL_PWM+0, 1

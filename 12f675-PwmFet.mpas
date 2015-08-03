@@ -37,7 +37,7 @@ const
    c025 = 146;   // 2.5 * 1024 / 17.6
    cLow = 17;    // 0.3 * 1024 / 17.6
    { 4MHz }
-   PWM_MAX = 180;   // 1000000 / 2 / 170
+   PWM_MAX = 180;   // 1000000 / 2 / 180
    PWM_LOW = 0;
    
    TMR1L_LOAD=$17; // 1000000 / 1000, 65535-1000
@@ -212,7 +212,7 @@ begin
                    end;
                Read_ADC;
                if adc_vol>vTarget+29 then begin
-                 VOL_PWM:=VOL_PWM shr 4;
+                 VOL_PWM:=VOL_PWM shr 3;
                  Read_ADC;
                end;
              until adc_vol>=vTarget;
