@@ -24,7 +24,7 @@ _Interrupt:
 	BTFSS      STATUS+0, 2
 	GOTO       L__Interrupt8
 ;12f675-PwmFet.mpas,70 :: 		TMR0:=255-PWM_MAX
-	MOVLW      75
+	MOVLW      68
 	MOVWF      TMR0+0
 	GOTO       L__Interrupt9
 ;12f675-PwmFet.mpas,71 :: 		else begin
@@ -42,7 +42,7 @@ L__Interrupt9:
 L__Interrupt5:
 ;12f675-PwmFet.mpas,79 :: 		TMR0:=255-PWM_MAX+ON_PWM;
 	MOVF       _ON_PWM+0, 0
-	ADDLW      75
+	ADDLW      68
 	MOVWF      TMR0+0
 ;12f675-PwmFet.mpas,80 :: 		PWM_SIG:=1;
 	BSF        GP0_bit+0, BitPos(GP0_bit+0)
@@ -303,7 +303,7 @@ L__main78:
 ;12f675-PwmFet.mpas,200 :: 		repeat
 L__main54:
 ;12f675-PwmFet.mpas,201 :: 		if VOL_PWM<PWM_MAX then begin
-	MOVLW      180
+	MOVLW      187
 	SUBWF      _VOL_PWM+0, 0
 	BTFSC      STATUS+0, 0
 	GOTO       L__main60
@@ -386,7 +386,7 @@ L__main39:
 ;12f675-PwmFet.mpas,223 :: 		else if VOL_PWM=PWM_MAX then
 L__main66:
 	MOVF       _VOL_PWM+0, 0
-	XORLW      180
+	XORLW      187
 	BTFSS      STATUS+0, 2
 	GOTO       L__main69
 ;12f675-PwmFet.mpas,224 :: 		LED1_tm:=128
