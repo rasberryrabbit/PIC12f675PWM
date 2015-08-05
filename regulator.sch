@@ -89,8 +89,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "PWM Regulator v3"
-Date "2015-08-03"
-Rev "1.2k"
+Date "2015-08-05"
+Rev "1.3"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -345,12 +345,12 @@ $EndComp
 $Comp
 L R R6
 U 1 1 55680C08
-P 4050 2950
-F 0 "R6" V 4130 2950 50  0000 C CNN
-F 1 "1k" V 4050 2950 50  0000 C CNN
-F 2 "" V 3980 2950 30  0000 C CNN
-F 3 "" H 4050 2950 30  0000 C CNN
-	1    4050 2950
+P 4100 3150
+F 0 "R6" V 4180 3150 50  0000 C CNN
+F 1 "1k" V 4100 3150 50  0000 C CNN
+F 2 "" V 4030 3150 30  0000 C CNN
+F 3 "" H 4100 3150 30  0000 C CNN
+	1    4100 3150
 	0    1    1    0   
 $EndComp
 $Comp
@@ -375,7 +375,7 @@ F 3 "" H 3500 2350 30  0000 C CNN
 	1    3500 2350
 	0    1    1    0   
 $EndComp
-Text Label 3850 2550 2    60   ~ 0
+Text Label 4000 2550 2    60   ~ 0
 5Vout(GND)
 Text Notes 3750 3950 2    60   ~ 0
 GP3 (GND) = 5v\nGP4 (GND) = Check Charging
@@ -446,6 +446,41 @@ Text GLabel 5050 6550 2    60   Output ~ 0
 GND(-)
 Text GLabel 5050 5650 2    60   Output ~ 0
 Vto5v(+)
+Text Notes 3950 5450 2    60   ~ 0
+13v -> 5v Buffer
+$Comp
+L LED D7
+U 1 1 55C1B6BA
+P 2550 4550
+F 0 "D7" H 2550 4650 50  0000 C CNN
+F 1 "LED" H 2550 4450 50  0000 C CNN
+F 2 "" H 2550 4550 60  0000 C CNN
+F 3 "" H 2550 4550 60  0000 C CNN
+	1    2550 4550
+	-1   0    0    1   
+$EndComp
+$Comp
+L LED D8
+U 1 1 55C1B8A3
+P 3100 4550
+F 0 "D8" H 3100 4650 50  0000 C CNN
+F 1 "LED" H 3100 4450 50  0000 C CNN
+F 2 "" H 3100 4550 60  0000 C CNN
+F 3 "" H 3100 4550 60  0000 C CNN
+	1    3100 4550
+	-1   0    0    1   
+$EndComp
+$Comp
+L R R9
+U 1 1 55C1B943
+P 2100 4150
+F 0 "R9" V 2180 4150 50  0000 C CNN
+F 1 "2.7k" V 2100 4150 50  0000 C CNN
+F 2 "" V 2030 4150 30  0000 C CNN
+F 3 "" H 2100 4150 30  0000 C CNN
+	1    2100 4150
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
 	4800 3700 4800 3900
 Wire Wire Line
@@ -491,10 +526,6 @@ Wire Wire Line
 Connection ~ 8150 3700
 Wire Wire Line
 	5200 2450 5200 3000
-Wire Wire Line
-	3850 2850 4450 2850
-Wire Wire Line
-	4450 2850 4450 3100
 Wire Wire Line
 	4650 2400 4650 2550
 Wire Wire Line
@@ -544,12 +575,6 @@ Wire Wire Line
 Wire Wire Line
 	4800 1500 4800 1850
 Wire Wire Line
-	3900 2950 3850 2950
-Wire Wire Line
-	4200 2950 4250 2950
-Wire Wire Line
-	4250 2950 4250 3250
-Wire Wire Line
 	4250 3650 4250 3700
 Connection ~ 4250 3700
 Wire Wire Line
@@ -561,9 +586,7 @@ Wire Wire Line
 Wire Wire Line
 	1350 1500 4800 1500
 Wire Wire Line
-	3650 2350 3850 2350
-Wire Wire Line
-	3850 2350 3850 3050
+	3650 2350 4000 2350
 Wire Wire Line
 	3350 2350 3200 2350
 Wire Wire Line
@@ -603,8 +626,6 @@ Connection ~ 4650 6550
 Wire Wire Line
 	4650 5850 4650 5650
 Connection ~ 4650 5650
-Text Notes 3950 5450 2    60   ~ 0
-13v -> 5v Buffer
 Wire Notes Line
 	2900 5300 5600 5300
 Wire Notes Line
@@ -613,4 +634,43 @@ Wire Notes Line
 	5600 6750 2900 6750
 Wire Notes Line
 	2900 6750 2900 5300
+Wire Wire Line
+	3850 3050 4000 3050
+Wire Wire Line
+	4000 3050 4000 2350
+Wire Wire Line
+	4250 3250 4250 3150
+Wire Wire Line
+	3950 3150 3850 3150
+Wire Wire Line
+	4450 3100 4450 2950
+Wire Wire Line
+	4450 2950 3850 2950
+Wire Wire Line
+	2100 4300 2100 4550
+Wire Wire Line
+	2100 4550 2350 4550
+Wire Wire Line
+	3300 4550 3900 4550
+Wire Wire Line
+	3900 4550 3900 3700
+Connection ~ 3900 3700
+Wire Wire Line
+	2100 4000 2100 2750
+Connection ~ 2100 2750
+Wire Wire Line
+	2750 4550 2900 4550
+Wire Wire Line
+	3850 2850 3950 2850
+Wire Wire Line
+	3950 2850 3950 3600
+Wire Wire Line
+	3950 3600 2350 3600
+Wire Wire Line
+	2350 3600 2350 4450
+Wire Wire Line
+	2350 4450 2100 4450
+Connection ~ 2100 4450
+Text Label 2850 3600 0    60   ~ 0
+3.6vREF
 $EndSCHEMATC

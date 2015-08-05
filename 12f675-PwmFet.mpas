@@ -44,7 +44,7 @@ const
    TMR1H_LOAD=$fc;
 
 var
-   LED1:sbit at GP2_bit;
+   LED1:sbit at GP4_bit;
    PWM_SIG:sbit at GP0_bit;
    VOut5:sbit at GP3_bit;     // pin 4
    {$ifdef USE_PWM_SYNC}
@@ -132,11 +132,12 @@ begin
      OSCCAL:=$34;
      {$endif}
      CMCON:=7;
-     ANSEL:=%00010010;     // 2us tAD, channel 1
+     ANSEL:=%00010100;     // 2us tAD, channel 2
 
-     TRISIO0_bit:=0;
-     TRISIO1_bit:=1;
-     TRISIO2_bit:=0;
+     TRISIO0_bit:=0;      // PWM
+     TRISIO1_bit:=1;      // VREF
+     TRISIO2_bit:=1;      // ADC
+     TRISIO4_bit:=0;      // LED
      {$ifdef USE_PWM_SYNC}
      TRISIO5_bit:=0;  // PWM_SYNC
      {$endif}
@@ -156,7 +157,7 @@ begin
      OPTION_REG:=%01010000;        // ~2KHz @ 4MHz, enable weak pull-up
      TMR0IE_bit:=1;
      
-     ADCON0:=%10000101;            // ADC config
+     ADCON0:=%11001001;            // Right Justfied, VREF, Channel 2
      
      PEIE_bit:=1;
      
