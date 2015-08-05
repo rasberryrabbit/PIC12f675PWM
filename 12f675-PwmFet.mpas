@@ -21,8 +21,10 @@ program _12f675_PwmFet;
 }
 
 {.$define USE_OSCAL}
+{.$define USE_OLD_SCH}
 {.$define MAX_LOAD_RESET}
 {.$define USE_PWM_SYNC}
+{.$define INC_PWM_DUTY}
 
 const
    c160 = 931;   // 16.0 * 1024 / 17.6
@@ -44,7 +46,7 @@ const
    TMR1H_LOAD=$fc;
 
 var
-   LED1:sbit at GP4_bit;
+   LED1:sbit at {$ifndef USE_OLD_SCH}GP4_bit{$else}GP2_bit{$endif};
    PWM_SIG:sbit at GP0_bit;
    VOut5:sbit at GP3_bit;     // pin 4
    {$ifdef USE_PWM_SYNC}
@@ -77,11 +79,13 @@ begin
          end;
        end else begin
          TMR0:=255-PWM_MAX+ON_PWM;
+         {$ifdef INC_PWM_DUTY}
          // decrease off time. Increase PWM duty.
          if TMR0<=255-10 then
            TMR0:=TMR0+10
            else
              TMR0:=255;
+         {$endif}
          PWM_SIG:=1;
          {$ifdef USE_PWM_SYNC}
          PWM_SYNC:=1;
@@ -132,12 +136,16 @@ begin
      OSCCAL:=$34;
      {$endif}
      CMCON:=7;
-     ANSEL:=%00010100;     // 2us tAD, channel 2
+     ANSEL:={$ifndef USE_OLD_SCH}%00010100{$else}%00010010{$endif};    // 2us tAD, channel 2
 
      TRISIO0_bit:=0;      // PWM
-     TRISIO1_bit:=1;      // VREF
+     TRISIO1_bit:=1;      // VREF or ADC
+     {$ifndef USE_OLD_SCH}
      TRISIO2_bit:=1;      // ADC
      TRISIO4_bit:=0;      // LED
+     {$else}
+     TRISIO2_bit:=0;      // LED
+     {$endif}
      {$ifdef USE_PWM_SYNC}
      TRISIO5_bit:=0;  // PWM_SYNC
      {$endif}
@@ -157,7 +165,7 @@ begin
      OPTION_REG:=%01010000;        // ~2KHz @ 4MHz, enable weak pull-up
      TMR0IE_bit:=1;
      
-     ADCON0:=%11001001;            // Right Justfied, VREF, Channel 2
+     ADCON0:={$ifndef USE_OLD_SCH}%11001001{$else}%10000101{$endif};            // Right Justfied, VREF, Channel 2
      
      PEIE_bit:=1;
      
